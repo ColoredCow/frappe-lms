@@ -133,6 +133,7 @@
 								v-if="!showAnswers.length && !questionDetails.data.multiple"
 								type="radio"
 								:name="encodeURIComponent(questionDetails.data.question)"
+								:checked="selectedOptions[index - 1] === 1"
 								class="w-3.5 h-3.5 text-ink-gray-9 focus:ring-outline-gray-modals"
 								@change="markAnswer(index)"
 							/>
@@ -141,6 +142,7 @@
 								v-else-if="!showAnswers.length && questionDetails.data.multiple"
 								type="checkbox"
 								:name="encodeURIComponent(questionDetails.data.question)"
+								:checked="selectedOptions[index - 1] === 1"
 								class="w-3.5 h-3.5 text-ink-gray-9 rounded-sm focus:ring-outline-gray-modals"
 								@change="markAnswer(index)"
 							/>
