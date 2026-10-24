@@ -272,7 +272,15 @@ const assignment = createResource({
 
 const submissionResource = createDocumentResource({
 	doctype: 'LMS Assignment Submission',
-	name: props.submissionName,
+	// frappe-ui caches document resources by doctype + name, in memory and in
+	// IndexedDB. Every unsaved form used the name 'new', so they all shared one
+	// entry, and the reload after an insert wrote that submission into it: the
+	// next new form, on any assignment, showed and could save the previous
+	// answer or file. An unsaved form gets a key of its own.
+	name:
+		props.submissionName === 'new'
+			? `new-${props.assignmentID}-${Date.now()}`
+			: props.submissionName,
 	auto: false,
 	onError(err) {
 		toast.error(err.messages?.[0] || err)
@@ -405,7 +413,10 @@ const getType = () => {
 
 const removeSubmission = () => {
 	isDirty.value = true
-	submissionResource.doc.assignment_attachment = ''
+	attachment.value = null
+	if (submissionResource.doc) {
+		submissionResource.doc.assignment_attachment = ''
+	}
 }
 
 const canGradeSubmission = computed(() => {
