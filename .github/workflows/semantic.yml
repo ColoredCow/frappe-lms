@@ -1,19 +1,23 @@
 name: Semantic Pull Request
 
+# zeke/semantic-pull-requests@main no longer ships an action.yml, so the old job
+# failed before it read the title. amannn/action-semantic-pull-request is the
+# maintained equivalent, pinned to the v6.1.1 commit.
 on:
-  push:
-    branches: [ main ]
-  pull_request: {}
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - edited
+      - synchronize
 
 jobs:
-  # This workflow contains a single job called "build"
   semantic:
     name: Validate PR title
     runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
+    permissions:
+      pull-requests: read
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
-
-      - uses: zeke/semantic-pull-requests@main
+      - uses: amannn/action-semantic-pull-request@48f256284bd46cdaab1048c3721360e808335d50 # v6.1.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
